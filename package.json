@@ -1,0 +1,25 @@
+{
+  "name": "happergy-prices",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:pro": "node sh/getJSON.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Happergy/happergy-prices.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Happergy/happergy-prices/issues"
+  },
+  "homepage": "https://github.com/Happergy/happergy-prices#readme",
+  "devDependencies": {
+    "request": "^2.88.2"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.7"
+  }
+}
