@@ -2,6 +2,10 @@
 var fs = require("fs");
 var request = require("request");
 var dayjs = require("dayjs");
+var utc = require("dayjs/plugin/utc");
+var timezone = require("dayjs/plugin/timezone");
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 // Make the following curl call to get the JSON from the API
 // curl 'https://api.happergy.es/bestMomentDevices' \
@@ -37,8 +41,11 @@ request.post(
   },
   function (error, response, body) {
     if (!error && response.statusCode == 200) {
+      const now = dayjs().tz("Europe/Madrid").format("YYYYMMDD");
+      console.log(now);
+
       fs.writeFile(
-        "data/" + dayjs().format("YYYYMMDD") + ".json",
+        "data/" + now + ".json",
         JSON.stringify(body),
         function (err) {
           if (err) {
