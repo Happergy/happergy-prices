@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:pro": "node sh/getJSON.js"
+    "build:pro": "node sh/pvpc.js && node sh/prices.js"
   },
   "repository": {
     "type": "git",
