@@ -7,7 +7,7 @@ on:
       - main
 
   schedule:
-    Runs "at minute 0 past every hour" (see https://crontab.guru)
+    # Runs "at minute 0 past every hour" (see https://crontab.guru)
     - cron: "0 * * * *"
 
 jobs:
