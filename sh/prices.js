@@ -15,18 +15,23 @@ request.post(
         {
           id: "generic1",
           duration: 1,
+
+          consumptionKWh: 1,
         },
         {
           id: "generic2",
           duration: 2,
+          consumptionKWh: 1,
         },
         {
           id: "generic4",
           duration: 4,
+          consumptionKWh: 1,
         },
         {
           id: "generic6",
           duration: 6,
+          consumptionKWh: 1,
         },
       ],
       tariff: "PCB",
@@ -35,8 +40,6 @@ request.post(
   function (error, response, body) {
     if (!error && response.statusCode == 200) {
       const now = dayjs().tz("Europe/Madrid").format("YYYYMMDD");
-      console.log(now);
-
       fs.writeFile(
         "data/" + now + ".json",
         JSON.stringify(body),
@@ -44,7 +47,7 @@ request.post(
           if (err) {
             return console.log(err);
           }
-          console.log("The file" + now + ".json was saved!");
+          console.log("[Prices] The file " + now + ".json was saved!");
         }
       );
     }

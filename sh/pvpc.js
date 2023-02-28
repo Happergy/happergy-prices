@@ -7,21 +7,29 @@ const timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+const tomorrow = dayjs().tz("Europe/Madrid").add(1, "day").format("YYYY-MM-DD");
+
 request.get(
-  "https://api.esios.ree.es/archives/70/download_json",
+  `https://api.esios.ree.es/archives/70/download_json?date=${tomorrow}`,
   {},
   function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      const now = dayjs().tz("Europe/Madrid").format("YYYYMMDD");
-
-      const fileName = `pvpc-${now}`;
+      const fileName = `${dayjs(tomorrow).format("YYYYMMDD")}-pvpc`;
       const targetFile = "data/" + fileName + ".json";
       try {
         if (fs.existsSync(targetFile)) {
-          //file exists
-          console.log("The file exists");
+          console.log(`[PVPC] The file exists: ${targetFile}`);
         } else {
-          const data = JSON.parse(body).PVPC.map(
+          const { PVPC: pvpc, message } = JSON.parse(body);
+          if (!pvpc) {
+            if (message) {
+              console.log(`[PVPC] ${message}`);
+            } else {
+              console.log("[PVPC] No data");
+            }
+            return;
+          }
+          const data = pvpc.map(
             ({ PCB, Dia, Hora, PMHPCB, TEUPCB, EDCGASPCB }) => ({
               Dia,
               Hora,
@@ -38,7 +46,7 @@ request.get(
               if (err) {
                 return console.log(err);
               }
-              console.log("The file" + fileName + ".json was saved!");
+              console.log("[PVPC] The file " + fileName + ".json was saved!");
             }
           );
         }
