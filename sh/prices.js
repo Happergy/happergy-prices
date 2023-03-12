@@ -7,36 +7,9 @@ var timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-request.post(
-  "https://api.happergy.es/bestMomentDevices",
-  {
-    json: {
-      config: [
-        {
-          id: "generic1",
-          duration: 1,
-
-          consumptionKWh: 1,
-        },
-        {
-          id: "generic2",
-          duration: 2,
-          consumptionKWh: 1,
-        },
-        {
-          id: "generic4",
-          duration: 4,
-          consumptionKWh: 1,
-        },
-        {
-          id: "generic6",
-          duration: 6,
-          consumptionKWh: 1,
-        },
-      ],
-      tariff: "PCB",
-    },
-  },
+request.get(
+  "https://us-central1-best-price-pvpc.cloudfunctions.net/generic",
+  null,
   function (error, response, body) {
     if (!error && response.statusCode == 200) {
       const now = dayjs().tz("Europe/Madrid").format("YYYYMMDD");

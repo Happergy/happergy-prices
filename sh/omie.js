@@ -8,7 +8,7 @@ const Papa = require("papaparse");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const tomorrow = dayjs().tz("Europe/Madrid").add(0, "day").format("YYYYMMDD");
+const tomorrow = dayjs().tz("Europe/Madrid").add(1, "day").format("YYYYMMDD");
 
 const parsePriceDateOMIE = (prices) =>
   prices.map((item) => {

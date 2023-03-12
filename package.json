@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:pro": "node sh/pvpc.js && node sh/omie.js"
+    "build:pro": "node sh/pvpc.js && node sh/omie.js",
+    "build": "node sh/pvpc.js && node sh/omie.js && node sh/prices.js"
   },
   "repository": {
     "type": "git",
