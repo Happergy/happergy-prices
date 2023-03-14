@@ -9,7 +9,7 @@ dayjs.extend(timezone);
 
 request.get(
   "https://us-central1-best-price-pvpc.cloudfunctions.net/generic",
-  null,
+  {},
   function (error, response, body) {
     if (!error && response.statusCode == 200) {
       const now = dayjs().tz("Europe/Madrid").format("YYYYMMDD");
