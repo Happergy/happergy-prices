@@ -13,16 +13,12 @@ request.get(
   function (error, response, body) {
     if (!error && response.statusCode == 200) {
       const now = dayjs().tz("Europe/Madrid").format("YYYYMMDD");
-      fs.writeFile(
-        "data/" + now + ".json",
-        JSON.stringify(body),
-        function (err) {
-          if (err) {
-            return console.log(err);
-          }
-          console.log("[Prices] The file " + now + ".json was saved!");
+      fs.writeFile("data/" + now + ".json", body, function (err) {
+        if (err) {
+          return console.log(err);
         }
-      );
+        console.log("[Prices] The file " + now + ".json was saved!");
+      });
     }
   }
 );
