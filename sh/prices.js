@@ -7,17 +7,23 @@ var timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+const TARGET_FILE = "happergy.json";
+
 request.get(
   "https://us-central1-best-price-pvpc.cloudfunctions.net/generic",
   {},
   function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      const now = dayjs().tz("Europe/Madrid").format("YYYYMMDD");
-      fs.writeFile("data/" + now + ".json", body, function (err) {
+      const now = dayjs().tz("Europe/Madrid");
+      body = JSON.parse(body);
+      body.lastUpdate = now.format("YYYY-MM-DD HH:mm:ss");
+      body = JSON.stringify(body);
+
+      fs.writeFile("data/" + TARGET_FILE, body, function (err) {
         if (err) {
           return console.log(err);
         }
-        console.log("[Prices] The file " + now + ".json was saved!");
+        console.log("[Prices] The file " + TARGET_FILE + " was saved!");
       });
     }
   }

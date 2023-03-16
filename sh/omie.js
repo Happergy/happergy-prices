@@ -9,6 +9,16 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const tomorrow = dayjs().tz("Europe/Madrid").add(1, "day").format("YYYYMMDD");
+const twoDaysAgo = dayjs()
+  .tz("Europe/Madrid")
+  .subtract(2, "day")
+  .format("YYYY-MM-DD");
+
+const getFilePath = (date) => {
+  const fileName = `${dayjs(date).format("YYYYMMDD")}-omie`;
+  const targetFile = "data/" + fileName + ".json";
+  return targetFile;
+};
 
 const parsePriceDateOMIE = (prices) =>
   prices.map((item) => {
@@ -32,11 +42,22 @@ request.get(
   {},
   function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      const fileName = `${tomorrow}-omie`;
-      const targetFile = "data/" + fileName + ".json";
+      const targetFilePath = getFilePath(tomorrow);
+      const removeFilePath = getFilePath(twoDaysAgo);
+
+      if (fs.existsSync(removeFilePath)) {
+        fs.unlink(removeFilePath, (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          console.log(`[OMIE] The file was deleted: ${removeFilePath}`);
+        });
+      }
+
       try {
-        if (fs.existsSync(targetFile)) {
-          console.log(`[OMIE] The file exists: ${targetFile}`);
+        if (fs.existsSync(targetFilePath)) {
+          console.log(`[OMIE] The file exists: ${targetFilePath}`);
         } else {
           if (!body) {
             console.log("[OMIE] No data");
@@ -53,16 +74,12 @@ request.get(
 
           const data = parsePriceDateOMIE(Papa.parse(body, config).data);
 
-          fs.writeFile(
-            "data/" + fileName + ".json",
-            JSON.stringify(data),
-            function (err) {
-              if (err) {
-                return console.log(err);
-              }
-              console.log("[OMIE] The file " + fileName + ".json was saved!");
+          fs.writeFile(targetFilePath, JSON.stringify(data), function (err) {
+            if (err) {
+              return console.log(err);
             }
-          );
+            console.log("[OMIE] The file " + targetFilePath + " was saved!");
+          });
         }
       } catch (err) {
         console.error(err);
