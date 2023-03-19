@@ -1,4 +1,4 @@
-// Node script to get JSON from a URL and write it to a file. Then the file is committed to the repo and pushed to GitHub.
+// Node script to get JSON from a URL and write it to a file. Then the file is committed to the repo to GitHub.
 var fs = require("fs");
 var request = require("request");
 var dayjs = require("dayjs");
