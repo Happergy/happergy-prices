@@ -25,6 +25,8 @@ request.get(
         }
         console.log("[Prices] The file " + TARGET_FILE + " was saved!");
       });
-    }
+    } else {
+console.error("error fetching data")
+}
   }
 );
