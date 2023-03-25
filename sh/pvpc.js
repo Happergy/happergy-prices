@@ -66,6 +66,17 @@ request.get(
             }
             console.log("[PVPC] The file " + targetFilePath + " was saved!");
           });
+          const now = dayjs().tz("Europe/Madrid");
+          fs.appendFile(
+            "data/log.md",
+            "\n- 💰 _" + now.format("YYYY-MM-DD HH:mm:ss") + " [PVPC]_",
+            function (err) {
+              if (err) {
+                return console.log(err);
+              }
+              console.log("[PVPC] The file log.md was updated!");
+            }
+          );
         }
       } catch (err) {
         console.error(err);

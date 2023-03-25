@@ -24,9 +24,19 @@ request.get(
           return console.log(err);
         }
         console.log("[Prices] The file " + TARGET_FILE + " was saved!");
+        fs.appendFile(
+          "data/log.md",
+          "\n- 🕐 " + now.format("YYYY-MM-DD HH:mm:ss") + " [prices]",
+          function (err) {
+            if (err) {
+              return console.log(err);
+            }
+            console.log("[Prices] The file log.md was updated!");
+          }
+        );
       });
     } else {
-console.error("error fetching data")
-}
+      console.error("error fetching data");
+    }
   }
 );

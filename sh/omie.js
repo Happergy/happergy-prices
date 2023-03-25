@@ -80,6 +80,17 @@ request.get(
             }
             console.log("[OMIE] The file " + targetFilePath + " was saved!");
           });
+          const now = dayjs().tz("Europe/Madrid");
+          fs.appendFile(
+            "data/log.md",
+            "\n- 📉 __" + now.format("YYYY-MM-DD HH:mm:ss") + " [OMIE]__",
+            function (err) {
+              if (err) {
+                return console.log(err);
+              }
+              console.log("[OMIE] The file log.md was updated!");
+            }
+          );
         }
       } catch (err) {
         console.error(err);
