@@ -8,7 +8,7 @@ on:
 
   schedule:
     # (see https://crontab.guru)
-    - cron: "0,56 * * * *"
+    - cron: "0,58 * * * *"
 
 jobs:
   build:
