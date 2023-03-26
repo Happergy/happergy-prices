@@ -26,7 +26,7 @@ request.get(
         console.log("[Prices] The file " + TARGET_FILE + " was saved!");
         fs.appendFile(
           "data/log.md",
-          "\n- 🕐 " + now.format("YYYY-MM-DD HH:mm:ss") + " [prices]",
+          "\n- 🕐 " + now.format("DD/MM HH:mm:ss") + " [prices]",
           function (err) {
             if (err) {
               return console.log(err);
