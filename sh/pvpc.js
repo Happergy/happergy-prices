@@ -69,7 +69,7 @@ request.get(
           const now = dayjs().tz("Europe/Madrid");
           fs.appendFile(
             "data/log.md",
-            "\n- 💰 _" + now.format("YYYY-MM-DD HH:mm:ss") + " [PVPC]_",
+            "\n- 💰 _" + now.format("HH:mm:ss") + " [PVPC]_",
             function (err) {
               if (err) {
                 return console.log(err);
