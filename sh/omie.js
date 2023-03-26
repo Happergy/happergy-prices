@@ -83,7 +83,7 @@ request.get(
           const now = dayjs().tz("Europe/Madrid");
           fs.appendFile(
             "data/log.md",
-            "\n- 📉 __" + now.format("YYYY-MM-DD HH:mm:ss") + " [OMIE]__",
+            "\n- 📉 __" + now.format("HH:mm:ss") + " [OMIE]__",
             function (err) {
               if (err) {
                 return console.log(err);
