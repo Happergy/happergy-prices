@@ -8,9 +8,9 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const tomorrow = dayjs().tz("Europe/Madrid").add(1, "day").format("YYYY-MM-DD");
-const twoDaysAgo = dayjs()
+const weekAgo = dayjs()
   .tz("Europe/Madrid")
-  .subtract(2, "day")
+  .subtract(8, "day")
   .format("YYYY-MM-DD");
 
 const getFilePath = (date) => {
@@ -25,7 +25,7 @@ request.get(
   function (error, response, body) {
     if (!error && response.statusCode == 200) {
       const targetFilePath = getFilePath(tomorrow);
-      const removeFilePath = getFilePath(twoDaysAgo);
+      const removeFilePath = getFilePath(weekAgo);
 
       try {
         if (fs.existsSync(removeFilePath)) {
@@ -75,6 +75,18 @@ request.get(
                 return console.log(err);
               }
               console.log("[PVPC] The file log.md was updated!");
+            }
+          );
+
+          request.get(
+            "https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC?sendMessage=false",
+            {},
+            function (error, response, body) {
+              if (!error && response.statusCode == 200) {
+                console.log("[PVPC] Happergy prices updated");
+              } else {
+                console.error("[PVPC] Error updating Happergy prices");
+              }
             }
           );
         }

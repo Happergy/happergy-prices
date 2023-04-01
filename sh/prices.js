@@ -15,9 +15,9 @@ request.get(
   function (error, response, body) {
     if (!error && response.statusCode == 200) {
       const now = dayjs().tz("Europe/Madrid");
-      body = JSON.parse(body);
-      body.lastUpdate = now.format("YYYY-MM-DD HH:mm:ss");
-      body = JSON.stringify(body);
+      // body = JSON.parse(body);
+      // body.lastUpdate = now.format("YYYY-MM-DD HH:mm:ss");
+      // body = JSON.stringify(body);
 
       fs.writeFile("data/" + TARGET_FILE, body, function (err) {
         if (err) {

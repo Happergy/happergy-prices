@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "pvpc": "node sh/pvpc.js && yarn prices",
+    "omie": "node sh/omie.js && yarn prices",
+    "prices": "node sh/prices.js",
     "build:pro": "node sh/pvpc.js && node sh/omie.js",
-    "build": "node sh/pvpc.js && node sh/omie.js && node sh/prices.js"
+    "build": "yarn prices"
   },
   "repository": {
     "type": "git",

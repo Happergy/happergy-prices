@@ -1,0 +1,40 @@
+# .github/workflows/scheduled-builds.yml
+name: Refresh data on a CRON Schedule
+
+on:
+  push:
+    branches:
+      - main
+
+  schedule:
+    # (see https://crontab.guru)
+    - cron: "15,20,25,30,45,50 12,13 * * *"
+
+jobs:
+  build:
+    name: Refresh data
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install # will run `yarn install` command
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # if needed
+
+      - name: Run OMIE script
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: omie
+
+      - name: Add and commit
+        uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
+        with:
+          message: "Update OMIE"
