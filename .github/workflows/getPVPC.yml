@@ -2,10 +2,6 @@
 name: Refresh data on a CRON Schedule
 
 on:
-  push:
-    branches:
-      - main
-
   schedule:
     # (see https://crontab.guru)
     - cron: "0,15,20,25,30,45,50 20,21 * * *"
