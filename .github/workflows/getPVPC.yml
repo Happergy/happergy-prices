@@ -1,5 +1,5 @@
 # .github/workflows/scheduled-builds.yml
-name: Refresh data on a CRON Schedule
+name: PVPC
 
 on:
   schedule:

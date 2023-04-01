@@ -1,5 +1,5 @@
 # .github/workflows/scheduled-builds.yml
-name: Refresh data on a CRON Schedule
+name: Happergy
 
 on:
   push:
