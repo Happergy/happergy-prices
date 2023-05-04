@@ -22,7 +22,7 @@ const getFilePath = (date) => {
 request.get(
   `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesOMIE?sendMessage=false`,
   {},
-  function (error, response, body) {
+  function (error, response, data) {
     if (!error && response.statusCode == 200) {
       const targetFilePath = getFilePath(tomorrow);
       const removeFilePath = getFilePath(weekAgo);
@@ -41,13 +41,13 @@ request.get(
         if (fs.existsSync(targetFilePath)) {
           console.log(`[OMIE] The file exists: ${targetFilePath}`);
         } else {
-          console.log("body ", body);
-          if (!body || body.length === 0) {
+          console.log("data ", data);
+          if (!data || data.length === 0) {
             console.log("[OMIE] No data");
             return false;
           }
 
-          fs.writeFile(targetFilePath, JSON.stringify(body), function (err) {
+          fs.writeFile(targetFilePath, data, function (err) {
             if (err) {
               return console.log(err);
             }
