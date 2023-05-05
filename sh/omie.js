@@ -27,17 +27,17 @@ request.get(
       const targetFilePath = getFilePath(tomorrow);
       const removeFilePath = getFilePath(weekAgo);
 
-      if (fs.existsSync(removeFilePath)) {
-        fs.unlink(removeFilePath, (err) => {
-          if (err) {
-            console.error(err);
-            return;
-          }
-          console.log(`[OMIE] The file was deleted: ${removeFilePath}`);
-        });
-      }
-
       try {
+        if (fs.existsSync(removeFilePath)) {
+          fs.unlink(removeFilePath, (err) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            console.log(`[OMIE] The file was deleted: ${removeFilePath}`);
+          });
+        }
+
         if (fs.existsSync(targetFilePath)) {
           console.log(`[OMIE] The file exists: ${targetFilePath}`);
         } else {

@@ -7,7 +7,7 @@ const timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const tomorrow = dayjs().tz("Europe/Madrid").add(1, "day").format("YYYY-MM-DD");
+const tomorrow = dayjs().tz("Europe/Madrid").add(1, "day").format("YYYYMMDD");
 const weekAgo = dayjs()
   .tz("Europe/Madrid")
   .subtract(8, "day")
@@ -20,9 +20,9 @@ const getFilePath = (date) => {
 };
 
 request.get(
-  `https://api.esios.ree.es/archives/70/download_json?date=${tomorrow}`,
+  `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC?sendMessage=false`,
   {},
-  function (error, response, body) {
+  function (error, response, data) {
     if (!error && response.statusCode == 200) {
       const targetFilePath = getFilePath(tomorrow);
       const removeFilePath = getFilePath(weekAgo);
@@ -41,31 +41,19 @@ request.get(
         if (fs.existsSync(targetFilePath)) {
           console.log(`[PVPC] The file exists: ${targetFilePath}`);
         } else {
-          const { PVPC: pvpc, message } = JSON.parse(body);
-          if (!pvpc) {
-            if (message) {
-              console.log(`[PVPC] ${message}`);
-            } else {
-              console.log("[PVPC] No data");
-            }
-            return;
+          console.log("data ", data);
+          if (!data || data.length === 0) {
+            console.log("[PVPC] No data");
+            return false;
           }
-          const data = pvpc.map(
-            ({ PCB, Dia, Hora, PMHPCB, TEUPCB, EDCGASPCB }) => ({
-              Dia,
-              Hora,
-              PCB,
-              PMHPCB,
-              TEUPCB,
-              EDCGASPCB,
-            })
-          );
-          fs.writeFile(targetFilePath, JSON.stringify(data), function (err) {
+
+          fs.writeFile(targetFilePath, data, function (err) {
             if (err) {
               return console.log(err);
             }
-            console.log("[PVPC] The file " + targetFilePath + " was saved!");
+            console.log("[PVPC] Happergy prices file " + targetFilePath + " was saved!");
           });
+
           const now = dayjs().tz("Europe/Madrid");
           fs.appendFile(
             "data/log.md",
@@ -74,19 +62,7 @@ request.get(
               if (err) {
                 return console.log(err);
               }
-              console.log("[PVPC] The file log.md was updated!");
-            }
-          );
-
-          request.get(
-            "https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC?sendMessage=false",
-            {},
-            function (error, response, body) {
-              if (!error && response.statusCode == 200) {
-                console.log("[PVPC] Happergy prices updated");
-              } else {
-                console.error("[PVPC] Error updating Happergy prices");
-              }
+              console.log("[PVPC] Happergy prices file log.md was updated!");
             }
           );
         }
