@@ -20,7 +20,7 @@ const getFilePath = (date) => {
 };
 
 request.get(
-  `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesOMIE`,
+  `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesOMIE?sendMessage=false`,
   {},
   function (error, response, data) {
     if (!error && response.statusCode == 200) {
