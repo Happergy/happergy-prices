@@ -10,7 +10,7 @@ on:
     # (see https://crontab.guru)
     - cron: "0,58 * * * *"
 
-  workflow_dispatch
+  workflow_dispatch:
 
 jobs:
   build:
