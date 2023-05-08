@@ -26,7 +26,7 @@ try {
     console.log(`[OMIE] The file exists: ${targetFilePath}`);
   } else {
     request.get(
-      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesOMIE?sendMessage=false`,
+      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesOMIE`,
       {},
       function (error, response, data) {
         if (!error && response.statusCode == 200) {
