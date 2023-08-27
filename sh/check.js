@@ -19,7 +19,7 @@ let updatedOMIE = false;
 let updatedPVPC = false;
 
 // Get hour for the latest prices
-const getHourLatestPrices = (date) => {
+const getHourLatestPrices = () => {
     const fileName = 'happergy';
     const targetFile = "data/" + fileName + ".json";
     const file = fs.readFileSync(targetFile, "utf8");
@@ -29,9 +29,12 @@ const getHourLatestPrices = (date) => {
 };
 
 const updatePrices = () => {
-    const hourLatestPrices = getHourLatestPrices(now);
+    const hourLatestPrices = getHourLatestPrices();
     if(currentHour !== hourLatestPrices) {
         console.log("💡 We need to update prices");
+        // log current and latest hour
+        console.log("Current hour: " + currentHour);
+        console.log("Latest hour: " + hourLatestPrices);
         require("./prices");
         return true;
     } else {
