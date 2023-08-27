@@ -24,7 +24,7 @@ const getHourLatestPrices = () => {
     const targetFile = "data/" + fileName + ".json";
     const file = fs.readFileSync(targetFile, "utf8");
     const data = JSON.parse(file);
-    const hour = dayjs(data.pvpcToday.currentPrice.date).format("HH");
+    const hour = dayjs(data.pvpcToday.currentPrice.date).tz("Europe/Madrid").format("HH");
     return hour;
 };
 
