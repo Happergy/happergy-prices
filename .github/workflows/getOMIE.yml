@@ -2,9 +2,9 @@
 name: OMIE
 
 on:
-  schedule:
+  # schedule:
     # (see https://crontab.guru)
-    - cron: "0,5,10,15,20,25,30,45,50 11,12,13,14,15 * * *"
+    # - cron: "0,5,10,15,20,25,30,45,50 11,12,13,14,15 * * *"
 
   workflow_dispatch:
 

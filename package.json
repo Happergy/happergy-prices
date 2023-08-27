@@ -7,8 +7,8 @@
     "pvpc": "node sh/pvpc.js && yarn prices",
     "omie": "node sh/omie.js && yarn prices",
     "prices": "node sh/prices.js",
-    "build:pro": "node sh/pvpc.js && node sh/omie.js",
-    "build": "yarn prices"
+    "build:pro": "node sh/check.js && node sh/pvpc.js && node sh/omie.js",
+    "build": "node sh/check.js"
   },
   "repository": {
     "type": "git",

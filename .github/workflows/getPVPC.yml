@@ -2,9 +2,9 @@
 name: PVPC
 
 on:
-  schedule:
+  # schedule:
     # (see https://crontab.guru) UTC Time
-    - cron: "0,15,20,25,30,45,50 18,19 * * *"
+    # - cron: "0,15,20,25,30,45,50 18,19 * * *"
   
   workflow_dispatch:
 
