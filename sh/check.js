@@ -12,7 +12,6 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const now = dayjs().tz("Europe/Madrid");
-const today = now.format("YYYY-MM-DD");
 const tomorrow = now.add(1, "day").format("YYYY-MM-DD");
 const currentHour = now.format("HH");
 
