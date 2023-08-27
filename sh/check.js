@@ -32,9 +32,6 @@ const updatePrices = () => {
     const hourLatestPrices = getHourLatestPrices();
     if(currentHour !== hourLatestPrices) {
         console.log("💡 We need to update prices");
-        // log current and latest hour
-        console.log("Current hour: " + currentHour);
-        console.log("Latest hour: " + hourLatestPrices);
         require("./prices");
         return true;
     } else {
