@@ -7,6 +7,8 @@ const timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+console.log("[OMIE] Checking OMIE prices");
+
 const tomorrow = dayjs().tz("Europe/Madrid").add(1, "day").format("YYYYMMDD");
 const weekAgo = dayjs()
   .tz("Europe/Madrid")
@@ -39,11 +41,10 @@ try {
                   console.error(err);
                   return;
                 }
-                console.log(`[OMIE] The file was deleted: ${removeFilePath}`);
+                console.log(`🗑️ [OMIE] Clean files: ${removeFilePath}`);
               });
             }
     
-            console.log("data ", data);
             if (!data || data.length === 0) {
               console.log("[OMIE] No data");
               return false;
@@ -53,23 +54,16 @@ try {
               if (err) {
                 return console.log(err);
               }
-              console.log("[OMIE] Happergy prices file " + targetFilePath + " was saved!");
+              console.log("💾 [OMIE] New prices weree saved");
             });
-    
-            const now = dayjs().tz("Europe/Madrid");
-            fs.appendFile(
-              "data/log.md",
-              "\n- 📉 __" + now.format("HH:mm:ss") + " [OMIE]__",
-              function (err) {
-                if (err) {
-                  return console.log(err);
-                }
-                console.log("[OMIE] Happergy prices file log.md was updated!");
-              }
-            );
+
+            require("./check.js").updatePrices();
           } catch (err) {
             console.error(err);
           }
+        } else {
+          console.error("[OMIE] Error fetching data");
+          require("./check.js").updatePrices();
         }
       }
     );

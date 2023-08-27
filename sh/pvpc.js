@@ -23,13 +23,18 @@ const targetFilePath = getFilePath(tomorrow);
 
 try {
   if (fs.existsSync(targetFilePath)) {
-    console.log(`[OMIE] The file exists: ${targetFilePath}`);
+    console.log(`[PVPC] The file exists: ${targetFilePath}`);
   } else {
     request.get(
       `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC`,
       {},
       function (error, response, data) {
-        if (!error && response.statusCode == 200) {
+        if (error) {
+          console.error("[PVPC] Error fetching data");
+          console.error(error);
+          return;
+        }
+        if (response.statusCode == 200) {
           const removeFilePath = getFilePath(weekAgo);
 
           try {
@@ -39,11 +44,10 @@ try {
                   console.error(err);
                   return;
                 }
-                console.log(`[PVPC] The file was deleted: ${removeFilePath}`);
+                console.log(`🗑️ [PVPC] Clean files: ${removeFilePath}`);
               });
             }
 
-            console.log("data ", data);
             if (!data || data.length === 0) {
               console.log("[PVPC] No data");
               return false;
@@ -53,23 +57,21 @@ try {
               if (err) {
                 return console.log(err);
               }
-              console.log("[PVPC] Happergy prices file " + targetFilePath + " was saved!");
+              console.log("💾 [PVPC] New prices weree saved");
             });
 
-            const now = dayjs().tz("Europe/Madrid");
-            fs.appendFile(
-              "data/log.md",
-              "\n- 💰 _" + now.format("HH:mm:ss") + " [PVPC]_",
-              function (err) {
-                if (err) {
-                  return console.log(err);
-                }
-                console.log("[PVPC] Happergy prices file log.md was updated!");
-              }
-            );
+            // Update prices
+            require("./check.js").updatePrices();
           } catch (err) {
             console.error(err);
           }
+        }
+        else {
+          console.error("[PVPC] " + response.statusCode + " Prices not yet available");
+
+          // Update prices
+          require("./check.js").updatePrices();
+          return;
         }
       }
     );

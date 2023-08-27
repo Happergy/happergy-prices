@@ -23,20 +23,10 @@ request.get(
         if (err) {
           return console.log(err);
         }
-        console.log("[Prices] The file " + TARGET_FILE + " was saved!");
-        fs.appendFile(
-          "data/log.md",
-          "\n- 🕐 " + now.format("DD/MM HH:mm:ss") + " [prices]",
-          function (err) {
-            if (err) {
-              return console.log(err);
-            }
-            console.log("[Prices] The file log.md was updated!");
-          }
-        );
+        console.log("🔥 The file " + TARGET_FILE + " was updated!");
       });
     } else {
-      console.error("error fetching data");
+      console.error("🔥 Error fetching data");
     }
   }
 );
