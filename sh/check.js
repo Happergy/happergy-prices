@@ -48,7 +48,7 @@ const getFilePath = (date) => {
     return targetFile;
 };
 
-if(!fs.existsSync(getFilePath(tomorrow, 'omie'))) {
+if(!fs.existsSync(getFilePath(tomorrow, 'omie')) && currentHour >= 10) {
     console.log("💡 We need to update OMIE prices");
     require("./omie");
     updatedOMIE = true;
@@ -64,7 +64,7 @@ const getPVPCFilePath = (date) => {
     return targetFile;
 };
 
-if(!fs.existsSync(getPVPCFilePath(tomorrow))) {
+if(!fs.existsSync(getPVPCFilePath(tomorrow)) && currentHour >= 19) {
     console.log("💡 We need to update PVPC prices");
     require("./pvpc");
     updatedPVPC = true;
