@@ -57,7 +57,7 @@ try {
               console.log("💾 [OMIE] New prices weree saved");
             });
 
-            require("./check.js").updatePrices();
+            require("./check.js").updatePrices(true);
           } catch (err) {
             console.error(err);
           }

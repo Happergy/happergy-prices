@@ -28,9 +28,9 @@ const getHourLatestPrices = () => {
     return hour;
 };
 
-const updatePrices = () => {
+const updatePrices = (force) => {
     const hourLatestPrices = getHourLatestPrices();
-    if(currentHour !== hourLatestPrices) {
+    if(currentHour !== hourLatestPrices && !force) {
         console.log("💡 We need to update prices");
         require("./prices");
         return true;

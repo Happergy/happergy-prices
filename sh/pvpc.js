@@ -61,7 +61,7 @@ try {
             });
 
             // Update prices
-            require("./check.js").updatePrices();
+            require("./check.js").updatePrices(true);
           } catch (err) {
             console.error(err);
           }
