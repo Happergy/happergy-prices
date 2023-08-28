@@ -30,12 +30,16 @@ const getHourLatestPrices = () => {
 
 const updatePrices = (force) => {
     const hourLatestPrices = getHourLatestPrices();
-    if (currentHour !== hourLatestPrices || force) {
-        console.log("💡 We need to update prices");
+    if (force) {
+        console.log(`💡 We need to force update prices from ${hourLatestPrices}:00`);
+        require("./prices");
+        return true;
+    } else if (currentHour !== hourLatestPrices) {
+        console.log(`💡 We are at ${currentHour}:00. We need to update prices from ${hourLatestPrices}:00`);
         require("./prices");
         return true;
     } else {
-        console.log("✅ Prices are up to date");
+        console.log(`✅ We are at ${currentHour}:00. Prices are from ${hourLatestPrices}:00`);
         return false;
     }
 };
