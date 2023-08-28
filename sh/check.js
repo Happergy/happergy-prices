@@ -30,7 +30,7 @@ const getHourLatestPrices = () => {
 
 const updatePrices = (force) => {
     const hourLatestPrices = getHourLatestPrices();
-    if(currentHour !== hourLatestPrices && !force) {
+    if (currentHour !== hourLatestPrices || force) {
         console.log("💡 We need to update prices");
         require("./prices");
         return true;
@@ -48,12 +48,16 @@ const getFilePath = (date) => {
     return targetFile;
 };
 
-if(!fs.existsSync(getFilePath(tomorrow, 'omie')) && parseInt(currentHour, 10) >= 13) {
+if (!fs.existsSync(getFilePath(tomorrow, 'omie')) && parseInt(currentHour, 10) >= 13) {
     console.log("💡 We need to update OMIE prices");
     require("./omie");
     updatedOMIE = true;
 } else {
-    console.log("✅ OMIE prices are up to date");
+    if (parseInt(currentHour, 10) < 20) {
+        console.log("⏲️ OMIE prices will be updated after 13:00");
+    } else {
+        console.log("✅ OMIE prices are up to date");
+    }
 }
 
 // Check if we have pvpc prices for tomorrow
@@ -64,12 +68,16 @@ const getPVPCFilePath = (date) => {
     return targetFile;
 };
 
-if(!fs.existsSync(getPVPCFilePath(tomorrow)) && parseInt(currentHour, 10) >= 20) {
+if (!fs.existsSync(getPVPCFilePath(tomorrow)) && parseInt(currentHour, 10) >= 20) {
     console.log("💡 We need to update PVPC prices");
     require("./pvpc");
     updatedPVPC = true;
 } else {
-    console.log("✅ PVPC prices are up to date");
+    if (parseInt(currentHour, 10) < 20) {
+        console.log("⏲️ PVPC prices will be updated after 20:00");
+    } else {
+        console.log("✅ PVPC prices are up to date");
+    }
 }
 
 if (updatedOMIE || updatedPVPC) {
