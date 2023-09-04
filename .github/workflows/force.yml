@@ -22,21 +22,14 @@ jobs:
           cmd: install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # if needed
-  
-  update:
-    name: Prepare data
-    runs-on: ubuntu-latest
-    steps:
+      
       - name: Force update prices
         uses: borales/actions-yarn@v4
         with:
           cmd: force
 
-  commit:
-    name: Update repository
-    runs-on: ubuntu-latest
-    steps:
-      - uses: EndBug/add-and-commit@v9 
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9 
         with:
           fetch: true
           message: "Force updated prices"
