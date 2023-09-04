@@ -22,7 +22,8 @@ jobs:
           cmd: install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # if needed
-
+  
+  update:
     name: Prepare data
     runs-on: ubuntu-latest
     steps:
@@ -31,6 +32,7 @@ jobs:
         with:
           cmd: force
 
+  commit:
     name: Update repository
     runs-on: ubuntu-latest
     steps:
