@@ -9,7 +9,8 @@
     "prices": "node sh/prices.js",
     "build:pro": "node sh/check.js && node sh/pvpc.js && node sh/omie.js",
     "build": "node sh/check.js",
-    "force": "node sh/force.js"
+    "force": "node sh/force.js",
+    "ecoData": "node sh/ecoData.js"
   },
   "repository": {
     "type": "git",

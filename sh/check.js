@@ -84,6 +84,17 @@ if (!fs.existsSync(getPVPCFilePath(tomorrow)) && parseInt(currentHour, 10) >= 20
     }
 }
 
+// const getEcoDataFilePath = (date) => {
+//     const fileName = `${dayjs(date).format("YYYYMMDD")}-ecoData`;
+//     const targetFile = "data/" + fileName + ".json";
+//     return targetFile;
+// };
+
+// if (!fs.existsSync(getEcoDataFilePath(tomorrow))) {
+//     console.log("💡 We need to update ecoData prices");
+//     require("./ecoData");
+// }
+
 if (updatedOMIE || updatedPVPC) {
     console.log("💡 Prices will be updated after new prices file");
 } else {
