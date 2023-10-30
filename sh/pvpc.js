@@ -13,20 +13,21 @@ const weekAgo = dayjs()
   .subtract(8, "day")
   .format("YYYY-MM-DD");
 
-const getFilePath = (date) => {
+const getFilePath = (date, version = '') => {
   const fileName = `${dayjs(date).format("YYYYMMDD")}-pvpc`;
-  const targetFile = "data/" + fileName + ".json";
+  const targetFile = `"data/${fileName}${version}.json"`;
   return targetFile;
 };
 
 const targetFilePath = getFilePath(tomorrow);
+const targetFilePathV2 = getFilePath(tomorrow, '-v2');
 
 try {
   if (fs.existsSync(targetFilePath)) {
     console.log(`[PVPC] The file exists: ${targetFilePath}`);
   } else {
     request.get(
-      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC`,
+      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC?sendMessage=false&date=2023-10-29`,
       {},
       function (error, response, data) {
         if (error) {
@@ -52,12 +53,19 @@ try {
               console.log("[PVPC] No data");
               return false;
             }
-
+            
             fs.writeFile(targetFilePath, data, function (err) {
               if (err) {
                 return console.log(err);
               }
               console.log("💾 [PVPC] New prices weree saved");
+            });
+
+            fs.writeFile(targetFilePathV2, JSON.stringify(JSON.parse(data).parsedPVPC), function (err) {
+              if (err) {
+                return console.log(err);
+              }
+              console.log("💾 [PVPC] New prices weree saved for v2");
             });
 
             // Update prices
