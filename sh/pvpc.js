@@ -13,14 +13,13 @@ const weekAgo = dayjs()
   .subtract(8, "day")
   .format("YYYY-MM-DD");
 
-const getFilePath = (date, version = '') => {
+const getFilePath = (date) => {
   const fileName = `${dayjs(date).format("YYYYMMDD")}-pvpc`;
-  const targetFile = `"data/${fileName}${version}.json"`;
+  const targetFile = "data/" + fileName + ".json";
   return targetFile;
 };
 
 const targetFilePath = getFilePath(tomorrow);
-const targetFilePathV2 = getFilePath(tomorrow, '-v2');
 
 try {
   if (fs.existsSync(targetFilePath)) {
@@ -59,13 +58,6 @@ try {
                 return console.log(err);
               }
               console.log("💾 [PVPC] New prices weree saved");
-            });
-
-            fs.writeFile(targetFilePathV2, JSON.stringify(JSON.parse(data).parsedPVPC), function (err) {
-              if (err) {
-                return console.log(err);
-              }
-              console.log("💾 [PVPC] New prices weree saved for v2");
             });
 
             // Update prices
