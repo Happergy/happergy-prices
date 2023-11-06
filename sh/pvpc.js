@@ -53,11 +53,11 @@ try {
               return false;
             }
 
-            fs.writeFile(targetFilePath, data, function (err) {
+            fs.writeFile(targetFilePath, data?.parsedPVPC, function (err) {
               if (err) {
                 return console.log(err);
               }
-              console.log("💾 [PVPC] New prices weree saved");
+              console.log("💾 [PVPC] New prices were saved");
             });
 
             // Update prices
