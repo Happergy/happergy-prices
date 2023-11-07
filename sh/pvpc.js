@@ -48,12 +48,13 @@ try {
               });
             }
 
-            console.log('data response', data);
             if (!data || data.length === 0) {
               console.log("[PVPC] No data");
               return false;
             }
-            console.log(data.parsedPVPC);
+
+            console.log('data response', JSON.parse(data));
+            console.log('data parsed', JSON.parse(data.parsedPVPC));
             const { parsedPVPC } = data;
             fs.writeFile(targetFilePath, parsedPVPC, function (err) {
               if (err) {
