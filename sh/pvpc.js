@@ -53,6 +53,7 @@ try {
               console.log("[PVPC] No data");
               return false;
             }
+            console.log(data.parsedPVPC);
             const { parsedPVPC } = data;
             fs.writeFile(targetFilePath, parsedPVPC, function (err) {
               if (err) {
