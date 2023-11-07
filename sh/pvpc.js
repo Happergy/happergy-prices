@@ -58,7 +58,7 @@ try {
             console.log('pvpc parsed', objectData.parsedPVPC);
             const { parsedPVPC } = objectData;
 
-            fs.writeFile(targetFilePath, parsedPVPC, function (err) {
+            fs.writeFile(targetFilePath, JSON.stringify(parsedPVPC), function (err) {
               if (err) {
                 return console.log(err);
               }
