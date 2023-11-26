@@ -10,7 +10,7 @@ dayjs.extend(timezone);
 const CLEANUP_DAYS = 2;
 const DEFAULT_FORMAT = "YYYY-MM-DD";
 
-const tomorrow = dayjs().add(1, "day").format("YYYYMMDD");
+const now = dayjs().format("YYYYMMDD");
 const weekAgo = dayjs().subtract(CLEANUP_DAYS, "day").format(DEFAULT_FORMAT);
 
 const getFilePath = (date) => {
@@ -19,7 +19,7 @@ const getFilePath = (date) => {
   return targetFile;
 };
 
-const targetFilePath = getFilePath(tomorrow);
+const targetFilePath = getFilePath(now);
 const lastUpdatedPath = "data/ecoData.json";
 
 try {
@@ -69,7 +69,7 @@ try {
               if (err) {
                 return console.log(err);
               }
-              console.log("💾 [EcoData] Last prices updated");
+              console.log("💾 [EcoData] Last ecoData updated");
             });
           } catch (err) {
             console.error(err);
