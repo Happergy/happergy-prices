@@ -53,7 +53,7 @@ try {
               return false;
             }
 
-            fs.writeFile(targetFilePath, JSON.stringify(data), function (err) {
+            fs.writeFile(targetFilePath, data, function (err) {
               if (err) {
                 return console.log(err);
               }
