@@ -52,10 +52,27 @@ try {
     
             fs.writeFile(targetFilePath, data, function (err) {
               if (err) {
-                return console.log(err);
+                return console.error(err);
               }
-              console.log("💾 [OMIE] New prices weree saved");
+              console.log("💾 [OMIE] New prices were saved");
             });
+
+            request.get(
+              `https://us-central1-best-price-pvpc.cloudfunctions.net/simulatePVPC`,
+              {},
+              function (error, response, data) {
+                console.log('data', data)
+                if (!error && response.statusCode == 200) {
+                  fs.writeFile('data/pvpc.json', data, function (err) {
+                    if (err) {
+                      return console.error(err);
+                    }
+                    console.log("💾 [PVPC simulation] New prices were saved");
+                  });
+
+                }
+              }
+            );
 
             require("./check.js").updatePrices(true);
           } catch (err) {
