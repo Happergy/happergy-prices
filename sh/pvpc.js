@@ -26,7 +26,7 @@ try {
     console.log(`[PVPC] The file exists: ${targetFilePath}`);
   } else {
     request.get(
-      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC&sendMessage=false`,
+      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC?sendMessage=false`,
       {},
       function (error, response, data) {
         if (error) {
@@ -53,10 +53,7 @@ try {
               return false;
             }
 
-            const objectData = JSON.parse(data);
-            const { parsedPVPC } = objectData;
-
-            fs.writeFile(targetFilePath, JSON.stringify(parsedPVPC), function (err) {
+            fs.writeFile(targetFilePath, JSON.stringify(data), function (err) {
               if (err) {
                 return console.log(err);
               }
