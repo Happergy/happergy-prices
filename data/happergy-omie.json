@@ -1,0 +1,170 @@
+{
+  "omie": {
+    "lastUpdated": "2024-01-14 10:49:31",
+    "prices": {
+      "devices": [
+        {
+          "cheapestCost": "0.062",
+          "consumptionKWh": "1",
+          "costSavings": 0.012999999999999998,
+          "currentCost": "0.075",
+          "duration": "1",
+          "endTime": "2024-01-14T15:00:00+00:00",
+          "id": "generic1",
+          "isOutOfRange": false,
+          "startTime": "2024-01-14T14:00:00+00:00"
+        },
+        {
+          "cheapestCost": "0.13",
+          "consumptionKWh": "1",
+          "costSavings": 0.010000000000000009,
+          "currentCost": "0.14",
+          "duration": "2",
+          "endTime": "2024-01-14T15:00:00+00:00",
+          "id": "generic2",
+          "isOutOfRange": false,
+          "startTime": "2024-01-14T13:00:00+00:00"
+        },
+        {
+          "cheapestCost": "0.19",
+          "consumptionKWh": "1",
+          "costSavings": 0.01999999999999999,
+          "currentCost": "0.21",
+          "duration": "3",
+          "endTime": "2024-01-14T16:00:00+00:00",
+          "id": "generic3",
+          "isOutOfRange": false,
+          "startTime": "2024-01-14T13:00:00+00:00"
+        },
+        {
+          "cheapestCost": "0.26",
+          "consumptionKWh": "1",
+          "costSavings": 0.020000000000000018,
+          "currentCost": "0.28",
+          "duration": "4",
+          "endTime": "2024-01-14T16:00:00+00:00",
+          "id": "generic4",
+          "isOutOfRange": false,
+          "startTime": "2024-01-14T12:00:00+00:00"
+        },
+        {
+          "cheapestCost": "0.32",
+          "consumptionKWh": "1",
+          "costSavings": 0.020000000000000018,
+          "currentCost": "0.34",
+          "duration": "5",
+          "endTime": "2024-01-14T16:00:00+00:00",
+          "id": "generic5",
+          "isOutOfRange": false,
+          "startTime": "2024-01-14T11:00:00+00:00"
+        },
+        {
+          "cheapestCost": "0.39",
+          "consumptionKWh": "1",
+          "costSavings": 0.010000000000000009,
+          "currentCost": "0.40",
+          "duration": "6",
+          "endTime": "2024-01-14T16:00:00+00:00",
+          "id": "generic6",
+          "isOutOfRange": false,
+          "startTime": "2024-01-14T10:00:00+00:00"
+        },
+        {
+          "cheapestCost": "0.47",
+          "consumptionKWh": "1",
+          "costSavings": 0,
+          "currentCost": "0.47",
+          "duration": "7",
+          "endTime": "2024-01-14T17:00:00+00:00",
+          "id": "generic7",
+          "isOutOfRange": false,
+          "startTime": "2024-01-14T10:00:00+00:00"
+        },
+        {
+          "cheapestCost": "0.54",
+          "consumptionKWh": "1",
+          "costSavings": 0,
+          "currentCost": "0.54",
+          "duration": "8",
+          "endTime": "2024-01-14T17:00:00+00:00",
+          "id": "generic8",
+          "isOutOfRange": false,
+          "startTime": "2024-01-14T09:00:00+00:00"
+        }
+      ],
+      "nextPrices": [
+        {
+          "date": "2024-01-14T10:00:00+01:00",
+          "price": 7469
+        },
+        {
+          "date": "2024-01-14T11:00:00+01:00",
+          "price": 6900
+        },
+        {
+          "date": "2024-01-14T12:00:00+01:00",
+          "price": 6780
+        },
+        {
+          "date": "2024-01-14T13:00:00+01:00",
+          "price": 6540
+        },
+        {
+          "date": "2024-01-14T14:00:00+01:00",
+          "price": 6310
+        },
+        {
+          "date": "2024-01-14T15:00:00+01:00",
+          "price": 6230
+        },
+        {
+          "date": "2024-01-14T16:00:00+01:00",
+          "price": 6513
+        },
+        {
+          "date": "2024-01-14T17:00:00+01:00",
+          "price": 7284
+        },
+        {
+          "date": "2024-01-14T18:00:00+01:00",
+          "price": 8618
+        },
+        {
+          "date": "2024-01-14T19:00:00+01:00",
+          "price": 9201
+        },
+        {
+          "date": "2024-01-14T20:00:00+01:00",
+          "price": 8603
+        },
+        {
+          "date": "2024-01-14T21:00:00+01:00",
+          "price": 8449
+        },
+        {
+          "date": "2024-01-14T22:00:00+01:00",
+          "price": 8297
+        },
+        {
+          "date": "2024-01-14T23:00:00+01:00",
+          "price": 7252
+        }
+      ],
+      "summary": {
+        "avgPrice": 7512,
+        "bestPrice": {
+          "date": "2024-01-14T15:00:00+01:00",
+          "price": 6230
+        },
+        "currentPrice": {
+          "date": "2024-01-14T10:00:00+01:00",
+          "price": 7469
+        },
+        "worstPrice": {
+          "date": "2024-01-14T19:00:00+01:00",
+          "price": 9201
+        }
+      }
+    }
+  }
+}
