@@ -41,7 +41,7 @@ jobs:
         run: pnpm install
 
       - name: Build pro 🔧
-        run: pnpm run pro
+        run: pnpm run force
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9 
