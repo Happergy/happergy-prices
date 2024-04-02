@@ -13,7 +13,7 @@ jobs:
     name: Refresh data
     runs-on: ubuntu-latest
     steps:
-     - name: Checkout 🛎️
+      - name: Checkout 🛎️
         uses: actions/checkout@v3
 
       - name: Use Node.js LTS 🚀
