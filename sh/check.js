@@ -24,13 +24,17 @@ const getHourLatestPrices = () => {
     const targetFile = "data/" + fileName + ".json";
     const file = fs.readFileSync(targetFile, "utf8");
     const data = JSON.parse(file);
-    const hour = dayjs(data.pvpcToday.currentPrice.date).tz("Europe/Madrid").format("HH");
+    const hour = data.pvpcToday?.currentPrice?.date && dayjs(data.pvpcToday?.currentPrice?.date).tz("Europe/Madrid").format("HH");
+    if (!hour) {
+        console.log("❌ Error getting hour from prices file");
+        return null;
+    }
     return hour;
 };
 
 const updatePrices = (force) => {
     const hourLatestPrices = getHourLatestPrices();
-    if (force) {
+    if (force || !hourLatestPrices) {
         console.log(`💡 We need to force update prices from ${hourLatestPrices}:00`);
         require("./prices");
         return true;

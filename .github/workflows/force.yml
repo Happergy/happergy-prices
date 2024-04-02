@@ -40,10 +40,10 @@ jobs:
       - name: Install dependencies 📦
         run: pnpm install
 
-      - name: Build pro 🔧
+      - name: Force refresh 🔧
         run: pnpm run force
 
-      - name: Commit changes
+      - name: Commit changes 📝
         uses: EndBug/add-and-commit@v9 
         with:
           fetch: true

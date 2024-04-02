@@ -13,26 +13,59 @@ jobs:
     name: Refresh data
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      # .github/workflows/scheduled-builds.yml
+name: EcoData
 
-      - name: Set Node.js 18.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
+on:
+  # schedule:
+    # (see https://crontab.guru) UTC Time
+    # - cron: "0 * * * *"
+  
+  workflow_dispatch:
 
-      - name: Run install
-        uses: borales/actions-yarn@v4
+jobs:
+  build:
+    name: Refresh data
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout 🛎️
+        uses: actions/checkout@v3
+    
+      - name: Use Node.js LTS 🚀
+        uses: actions/setup-node@v2
         with:
-          cmd: install # will run `yarn install` command
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # if needed
+          node-version: '20.*'
+          corepack: true
 
-      - name: Run PVPC script
-        uses: borales/actions-yarn@v4
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm 📦
         with:
-          cmd: pvpc
+          version: 8
+          run_install: false
 
-      - name: Add and commit
-        uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
+      - name: Get pnpm store directory 📁
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache 🗄️
         with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies 📦
+        run: pnpm install
+
+      - name: Run PVPC 🔧
+        run: pnpm run pvpc
+
+      - name: Commit changes 📝
+        uses: EndBug/add-and-commit@v9 
+        with:
+          fetch: true
           message: "Update PVPC"
+          pull: "--rebase --autostash"
+
