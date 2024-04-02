@@ -7,7 +7,8 @@ const timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const tomorrow = '20240402';
+const tomorrow = dayjs().tz("Europe/Madrid").add(1, "day").format("YYYYMMDD");
+const tomorrowPVPC = dayjs().tz("Europe/Madrid").add(1, "day").format("YYYYMMDD");
 const weekAgo = dayjs()
   .tz("Europe/Madrid")
   .subtract(8, "day")
@@ -26,7 +27,7 @@ try {
     console.log(`[PVPC] The file exists: ${targetFilePath}`);
   } else {
     request.get(
-      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC?date=${tomorrow}`,
+      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC?date=${tomorrowPVPC}`,
       {},
       function (error, response, data) {
         if (error) {
@@ -36,6 +37,8 @@ try {
         }
         if (response.statusCode == 200) {
           const removeFilePath = getFilePath(weekAgo);
+
+          console.log('data', data)
 
           try {
             if (fs.existsSync(removeFilePath)) {
