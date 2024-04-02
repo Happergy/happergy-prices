@@ -9,24 +9,39 @@ jobs:
     name: Prepare data
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+    
+      - name: Use Node.js LTS 🚀
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.*'
+          corepack: true
 
-      - name: Set Node.js 16.x
-        uses: actions/setup-node@v3
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm 📦
         with:
-          node-version: 16.x
+          version: 8
+          run_install: false
 
-      - name: Run install
-        uses: borales/actions-yarn@v4
+      - name: Get pnpm store directory 📁
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache 🗄️
         with:
-          cmd: install
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # if needed
-      
-      - name: Force update prices
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: force
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies 📦
+        run: pnpm install
+
+      - name: Build pro 🔧
+        run: pnpm run pro
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9 
