@@ -7,7 +7,7 @@ const timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const tomorrow = dayjs().tz("Europe/Madrid").add(1, "day").format("YYYYMMDD");
+const tomorrow = '20240402';
 const weekAgo = dayjs()
   .tz("Europe/Madrid")
   .subtract(8, "day")
