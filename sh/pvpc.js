@@ -27,7 +27,7 @@ try {
     console.log(`[PVPC] The file exists: ${targetFilePath}`);
   } else {
     request.get(
-      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC?date=${tomorrowPVPC}`,
+      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC`,
       {},
       function (error, response, data) {
         if (error) {
