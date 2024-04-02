@@ -7,7 +7,7 @@ const timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const tomorrow = dayjs().tz("Europe/Madrid").add(1, "day").format("YYYYMMDD");
+const tomorrow = '20240402';
 const weekAgo = dayjs()
   .tz("Europe/Madrid")
   .subtract(8, "day")
@@ -26,7 +26,7 @@ try {
     console.log(`[PVPC] The file exists: ${targetFilePath}`);
   } else {
     request.get(
-      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC`,
+      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC&sendMessage=false`,
       {},
       function (error, response, data) {
         if (error) {
