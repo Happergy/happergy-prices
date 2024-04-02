@@ -5,22 +5,7 @@ on:
   # schedule:
     # (see https://crontab.guru) UTC Time
     # - cron: "0,15,20,25,30,45,50 18,19 * * *"
-  
-  workflow_dispatch:
 
-jobs:
-  build:
-    name: Refresh data
-    runs-on: ubuntu-latest
-    steps:
-      # .github/workflows/scheduled-builds.yml
-name: EcoData
-
-on:
-  # schedule:
-    # (see https://crontab.guru) UTC Time
-    # - cron: "0 * * * *"
-  
   workflow_dispatch:
 
 jobs:
@@ -30,7 +15,7 @@ jobs:
     steps:
      - name: Checkout 🛎️
         uses: actions/checkout@v3
-    
+
       - name: Use Node.js LTS 🚀
         uses: actions/setup-node@v2
         with:
@@ -63,9 +48,8 @@ jobs:
         run: pnpm run pvpc
 
       - name: Commit changes 📝
-        uses: EndBug/add-and-commit@v9 
+        uses: EndBug/add-and-commit@v9
         with:
           fetch: true
           message: "Update PVPC"
           pull: "--rebase --autostash"
-
