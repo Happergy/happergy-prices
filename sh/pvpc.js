@@ -64,20 +64,21 @@ try {
             });
 
             // Update prices
-            require("./check.js").updatePrices(true);
+            // require("./check.js").updatePrices(true);
           } catch (err) {
             console.error(err);
           }
-        }
-        else {
+        } else {
           console.error("[PVPC] " + response.statusCode + " Prices not yet available");
 
           // Update prices
-          require("./check.js").updatePrices();
+          // require("./check.js").updatePrices();
           return;
         }
       }
     );
+    // Update prices
+    require("./check.js").updatePrices(true);
   }
 } catch (err) {
   console.error(err);
