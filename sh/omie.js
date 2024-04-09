@@ -33,7 +33,7 @@ try {
       function (error, response, data) {
         if (!error && response.statusCode == 200) {
           const removeFilePath = getFilePath(weekAgo);
-    
+
           try {
             if (fs.existsSync(removeFilePath)) {
               fs.unlink(removeFilePath, (err) => {
@@ -44,12 +44,12 @@ try {
                 console.log(`🗑️ [OMIE] Clean files: ${removeFilePath}`);
               });
             }
-    
+
             if (!data || data.length === 0) {
               console.log("[OMIE] No data");
               return false;
             }
-    
+
             fs.writeFile(targetFilePath, data, function (err) {
               if (err) {
                 return console.error(err);
@@ -73,17 +73,19 @@ try {
                 }
               }
             );
-
-            require("./check.js").updatePrices(true);
           } catch (err) {
             console.error(err);
           }
         } else {
           console.error("[OMIE] Error fetching data");
-          require("./check.js").updatePrices();
         }
       }
     );
+    // Update prices
+    setTimeout(() => {
+      console.log("Delayed update prices for 2 minutes.");
+      require("./check.js").updatePrices(true);
+    }, "120000");
   }
 } catch (err) {
   console.error(err);
