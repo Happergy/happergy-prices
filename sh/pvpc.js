@@ -62,20 +62,23 @@ try {
               }
               console.log("💾 [PVPC] New prices were saved");
             });
+
+            // Update prices
+            // require("./check.js").updatePrices(true);
           } catch (err) {
             console.error(err);
           }
         } else {
           console.error("[PVPC] " + response.statusCode + " Prices not yet available");
+
+          // Update prices
+          // require("./check.js").updatePrices();
           return;
         }
       }
     );
     // Update prices
-    setTimeout(() => {
-      console.log("Delayed update prices for 2 minutes.");
-      require("./check.js").updatePrices(true);
-    }, "120000");
+    require("./check.js").updatePrices(true);
   }
 } catch (err) {
   console.error(err);
