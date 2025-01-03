@@ -1,9 +1,9 @@
 // Node script to get JSON from a URL and write it to a file. Then the file is committed to the repo to GitHub.
-var fs = require("fs");
-var request = require("request");
-var dayjs = require("dayjs");
-var utc = require("dayjs/plugin/utc");
-var timezone = require("dayjs/plugin/timezone");
+const fs = require("fs");
+const request = require("request");
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 

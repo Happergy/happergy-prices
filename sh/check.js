@@ -56,7 +56,7 @@ const getFilePath = (date) => {
     return targetFile;
 };
 
-if (!fs.existsSync(getFilePath(tomorrow, 'omie')) && parseInt(currentHour, 10) >= 13) {
+if (!fs.existsSync(getFilePath(tomorrow)) && parseInt(currentHour, 10) >= 13) {
     console.log("💡 We need to update OMIE prices");
     require("./omie");
     updatedOMIE = true;
