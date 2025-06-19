@@ -16,7 +16,7 @@ request.get(
   {},
   function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      console.log('body', body)
+      // console.log('body', body)
       const prices = JSON.parse(body);
       const omiePrices = {
         omie: {

@@ -26,7 +26,7 @@ const getHourLatestPrices = () => {
     const data = JSON.parse(file);
     const hour = data.pvpcToday?.currentPrice?.date && dayjs(data.pvpcToday?.currentPrice?.date).tz("Europe/Madrid").format("HH");
     if (!hour) {
-        console.log("❌ Error getting hour from prices file");
+        console.log("❌ Error getting hour from prices PVPC file");
         return null;
     }
     return hour;
@@ -35,7 +35,7 @@ const getHourLatestPrices = () => {
 const updatePrices = (force) => {
     const hourLatestPrices = getHourLatestPrices();
     if (force || !hourLatestPrices) {
-        console.log(`💡 We need to force update prices from ${hourLatestPrices}:00`);
+        console.log(`💡 We need to force update prices`);
         require("./prices");
         return true;
     } else if (currentHour !== hourLatestPrices) {
