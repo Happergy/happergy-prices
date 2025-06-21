@@ -1,8 +1,14 @@
 # .github/workflows/scheduled-builds.yml
 name: Force refresh data
 
+
 on:
   workflow_dispatch:
+    inputs:
+      date:
+        description: 'Date to use for PVPC (YYYYMMDD or YYYY-MM-DD). Leave empty for today.'
+        required: false
+        default: ''
 
 jobs:
   build:
@@ -41,7 +47,12 @@ jobs:
         run: pnpm install
 
       - name: Force refresh 🔧
-        run: pnpm run force
+        run: |
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            node sh/pvpc.js "${{ github.event.inputs.date }}"
+          else
+            node sh/pvpc.js
+          fi
 
       - name: Commit changes 📝
         uses: EndBug/add-and-commit@v9 
