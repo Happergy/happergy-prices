@@ -46,13 +46,16 @@ jobs:
       - name: Install dependencies 📦
         run: pnpm install
 
-      - name: Force refresh 🔧
+      - name: Fetch PVPC prices
         run: |
           if [ -n "${{ github.event.inputs.date }}" ]; then
             node sh/pvpc.js "${{ github.event.inputs.date }}"
           else
             node sh/pvpc.js
           fi
+
+      - name: Update prices
+        run: pnpm run prices
 
       - name: Commit changes 📝
         uses: EndBug/add-and-commit@v9 

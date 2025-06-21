@@ -90,8 +90,7 @@ try {
         }
       }
     );
-    // Update prices
-    require("./check.js").updatePrices(true);
+    // ...existing code...
   }
 } catch (err) {
   console.error(err);

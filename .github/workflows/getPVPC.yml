@@ -1,12 +1,18 @@
 # .github/workflows/scheduled-builds.yml
 name: PVPC
 
+
 on:
   # schedule:
     # (see https://crontab.guru) UTC Time
     # - cron: "0,15,20,25,30,45,50 18,19 * * *"
 
   workflow_dispatch:
+    inputs:
+      date:
+        description: 'Date to use for PVPC (YYYYMMDD or YYYY-MM-DD). Leave empty for today.'
+        required: false
+        default: ''
 
 jobs:
   build:
@@ -44,8 +50,17 @@ jobs:
       - name: Install dependencies 📦
         run: pnpm install
 
+
       - name: Run PVPC 🔧
-        run: pnpm run pvpc
+        run: |
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            node sh/pvpc.js "${{ github.event.inputs.date }}"
+          else
+            node sh/pvpc.js
+          fi
+
+      - name: Update prices
+        run: pnpm run prices
 
       - name: Commit changes 📝
         uses: EndBug/add-and-commit@v9
