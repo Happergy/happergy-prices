@@ -41,6 +41,7 @@ try {
   if (fs.existsSync(targetFilePath)) {
     console.log(`[PVPC] The file exists: ${targetFilePath}`);
   } else {
+    console.log('targetDateStr', targetDateStr)
     request.get(
       `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC?date=${targetDateStr}`,
       {},
