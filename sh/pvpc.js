@@ -43,7 +43,7 @@ try {
   } else {
     console.log('targetDateStr', targetDateStr)
     request.get(
-      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC?date=${targetDateStr}`,
+      `https://us-central1-best-price-pvpc.cloudfunctions.net/getTomorrowPricesPVPC?date=${targetDate.format("YYYY-MM-DD")}`,
       {},
       function (error, response, data) {
         if (error) {
@@ -91,7 +91,6 @@ try {
         }
       }
     );
-    // ...existing code...
   }
 } catch (err) {
   console.error(err);
