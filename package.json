@@ -3,9 +3,13 @@
   "version": "1.2.0",
   "description": "",
   "main": "index.js",
+  "packageManager": "bun@1.2.5",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
-    "pvpc": "node sh/pvpc.js && pnpm run prices",
-    "omie": "node sh/omie.js && pnpm run prices",
+    "pvpc": "node sh/pvpc.js && bun run prices",
+    "omie": "node sh/omie.js && bun run prices",
     "prices": "node sh/prices.js",
     "build:pro": "node sh/check.js && node sh/pvpc.js && node sh/omie.js",
     "build": "node sh/check.js",
