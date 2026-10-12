@@ -14,6 +14,7 @@
     "build": "bun run sh/check.ts",
     "force": "bun run sh/force.ts",
     "ecoData": "bun run sh/ecoData.ts",
+    "test": "bun test",
     "typecheck": "tsc --noEmit",
     "format": "biome format --write sh package.json tsconfig.json biome.json error-example.json README.md index.html",
     "format:check": "biome format sh package.json tsconfig.json biome.json error-example.json README.md index.html"

@@ -1,23 +1,24 @@
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import { applyTomorrowPVPC, persistSimulatedPVPC, resolveTomorrowPVPC } from "./pvpcEstimate";
 import {
   API_BASE_URL,
   DATA_DIR,
-  TIME_ZONE,
   fetchText,
   isMainModule,
   isRecord,
   runCli,
   saveFile,
+  TIME_ZONE,
 } from "./runtime";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-interface GenericPrices {
+interface GenericPrices extends Record<string, unknown> {
   omie: unknown;
-  pvpc: unknown;
+  pvpc: Record<string, unknown>;
   pvpcToday: unknown;
   pvpcTomorrow: unknown;
 }
@@ -29,11 +30,13 @@ function parsePrices(body: string): GenericPrices {
     !("omie" in value) ||
     !("pvpc" in value) ||
     !("pvpcToday" in value) ||
-    !("pvpcTomorrow" in value)
+    !("pvpcTomorrow" in value) ||
+    !isRecord(value.pvpc)
   ) {
     throw new Error("The prices API returned an invalid response");
   }
   return {
+    ...value,
     omie: value.omie,
     pvpc: value.pvpc,
     pvpcToday: value.pvpcToday,
@@ -44,7 +47,12 @@ function parsePrices(body: string): GenericPrices {
 export async function runPrices(): Promise<void> {
   const body = await fetchText(`${API_BASE_URL}/generic`, "Prices");
   const prices = parsePrices(body);
-  const lastUpdated = dayjs().tz(TIME_ZONE).format("YYYY-MM-DD HH:mm:ss");
+  const now = dayjs().tz(TIME_ZONE);
+  const yesterday = now.subtract(1, "day").format("YYYY-MM-DD");
+  const tomorrow = now.add(1, "day").format("YYYY-MM-DD");
+  const forecast = await resolveTomorrowPVPC(prices.pvpc.nextPrices, yesterday, tomorrow);
+  applyTomorrowPVPC(prices, forecast, tomorrow);
+  const lastUpdated = now.format("YYYY-MM-DD HH:mm:ss");
   const omiePrices = { omie: { prices: prices.omie, lastUpdated } };
   const pvpcPrices = {
     pvpc: { prices: prices.pvpc, lastUpdated },
@@ -55,7 +63,8 @@ export async function runPrices(): Promise<void> {
   await Promise.all([
     saveFile(`${DATA_DIR}/happergy-omie.json`, JSON.stringify(omiePrices)),
     saveFile(`${DATA_DIR}/happergy-pvpc.json`, JSON.stringify(pvpcPrices)),
-    saveFile(`${DATA_DIR}/happergy.json`, body),
+    saveFile(`${DATA_DIR}/happergy.json`, JSON.stringify(prices)),
+    persistSimulatedPVPC(forecast, tomorrow),
   ]);
 
   console.log(
