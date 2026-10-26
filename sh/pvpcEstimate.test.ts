@@ -248,7 +248,7 @@ describe("PVPC tomorrow estimate", () => {
 
     applyTomorrowPVPC(payload, unavailable, tomorrow);
     assert.deepEqual((payload.pvpc as { nextPrices: PricePoint[] }).nextPrices, []);
-    assert.equal(payload.pvpcTomorrow, null);
+    assert.deepEqual(payload.pvpcTomorrow, {});
   });
 
   test("accepts a missing API nextPrices array while tomorrow is unavailable", () => {
@@ -267,7 +267,7 @@ describe("PVPC tomorrow estimate", () => {
     );
 
     assert.deepEqual(payload.pvpc, { nextPrices: [] });
-    assert.equal(payload.pvpcTomorrow, null);
+    assert.deepEqual(payload.pvpcTomorrow, {});
   });
 
   test("uses local official prices to populate today when the API is empty", () => {

@@ -322,7 +322,7 @@ export function applyTomorrowPVPC(
   payload.pvpc = { ...pvpc, nextPrices };
 
   if (result.kind === "unavailable") {
-    payload.pvpcTomorrow = null;
+    payload.pvpcTomorrow = {};
     console.log(`[PVPC estimate] Tomorrow's prices unavailable: ${result.reason}`);
   } else if (result.kind === "estimated") {
     payload.pvpcTomorrow = summarize(result.prices);
