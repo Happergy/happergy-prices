@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import {
+  applyTodayPVPC,
   applyTomorrowPVPC,
   completeOfficialTomorrow,
   estimatePVPCTomorrow,
@@ -248,6 +249,49 @@ describe("PVPC tomorrow estimate", () => {
     applyTomorrowPVPC(payload, unavailable, tomorrow);
     assert.deepEqual((payload.pvpc as { nextPrices: PricePoint[] }).nextPrices, []);
     assert.equal(payload.pvpcTomorrow, null);
+  });
+
+  test("accepts a missing API nextPrices array while tomorrow is unavailable", () => {
+    const tomorrow = "2099-01-01";
+    assert.equal(completeOfficialTomorrow(undefined, tomorrow), null);
+
+    const payload: Record<string, unknown> = {
+      pvpc: {},
+      pvpcToday: {},
+      pvpcTomorrow: {},
+    };
+    applyTomorrowPVPC(
+      payload,
+      { kind: "unavailable", prices: [], reason: "prices are not published yet" },
+      tomorrow,
+    );
+
+    assert.deepEqual(payload.pvpc, { nextPrices: [] });
+    assert.equal(payload.pvpcTomorrow, null);
+  });
+
+  test("uses local official prices to populate today when the API is empty", () => {
+    const today = "2026-10-26";
+    const official = dailyPrices(today, (index) => 10_000 + index * 100);
+    const payload: Record<string, unknown> = {
+      pvpc: {},
+      pvpcToday: {},
+      pvpcTomorrow: {},
+    };
+
+    applyTodayPVPC(payload, official, today, dayjs.tz(`${today}T10:30:00`, TIME_ZONE));
+
+    const nextPrices = (payload.pvpc as { nextPrices: PricePoint[] }).nextPrices;
+    assert.equal(nextPrices.length, 14);
+    assert.equal(nextPrices[0].date, "2026-10-26T10:00:00+01:00");
+    assert.equal(nextPrices[0].price, 11_000);
+    assert.equal(nextPrices.at(-1)?.date, "2026-10-26T23:00:00+01:00");
+    assert.deepEqual(payload.pvpcToday, {
+      avgPrice: 11_150,
+      bestPrice: nextPrices[0],
+      currentPrice: nextPrices[0],
+      worstPrice: nextPrices.at(-1),
+    });
   });
 
   test("writes the estimated OMIE date to a separate simulated PVPC file", async () => {

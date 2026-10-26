@@ -1,0 +1,202 @@
+[
+  {
+    "date": "2026-10-25T00:00:00+02:00",
+    "price": 13529,
+    "PMH": 20898,
+    "TEU": 329,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T01:00:00+02:00",
+    "price": 12979,
+    "PMH": 20335,
+    "TEU": 329,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T02:00:00+02:00",
+    "price": 12955,
+    "PMH": 20234,
+    "TEU": 329,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T02:00:00+01:00",
+    "price": 12955,
+    "PMH": 20234,
+    "TEU": 329,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T03:00:00+01:00",
+    "price": 13138,
+    "PMH": 20378,
+    "TEU": 329,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T04:00:00+01:00",
+    "price": 13151,
+    "PMH": 20411,
+    "TEU": 329,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T05:00:00+01:00",
+    "price": 14509,
+    "PMH": 21864,
+    "TEU": 329,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T06:00:00+01:00",
+    "price": 17784,
+    "PMH": 24854,
+    "TEU": 329,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T07:00:00+01:00",
+    "price": 21919,
+    "PMH": 26352,
+    "TEU": 329,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T08:00:00+01:00",
+    "price": 29963,
+    "PMH": 31206,
+    "TEU": 2927,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T09:00:00+01:00",
+    "price": 27063,
+    "PMH": 28147,
+    "TEU": 2927,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T10:00:00+01:00",
+    "price": 29602,
+    "PMH": 25572,
+    "TEU": 9755,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T11:00:00+01:00",
+    "price": 24169,
+    "PMH": 21208,
+    "TEU": 9755,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T12:00:00+01:00",
+    "price": 21938,
+    "PMH": 19514,
+    "TEU": 9755,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T13:00:00+01:00",
+    "price": 22002,
+    "PMH": 19554,
+    "TEU": 9755,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T14:00:00+01:00",
+    "price": 15877,
+    "PMH": 20526,
+    "TEU": 2927,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T15:00:00+01:00",
+    "price": 16774,
+    "PMH": 21553,
+    "TEU": 2927,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T16:00:00+01:00",
+    "price": 19614,
+    "PMH": 24213,
+    "TEU": 2927,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T17:00:00+01:00",
+    "price": 23919,
+    "PMH": 28314,
+    "TEU": 2927,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T18:00:00+01:00",
+    "price": 34924,
+    "PMH": 31295,
+    "TEU": 9755,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T19:00:00+01:00",
+    "price": 37184,
+    "PMH": 32695,
+    "TEU": 9755,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T20:00:00+01:00",
+    "price": 38321,
+    "PMH": 34222,
+    "TEU": 9755,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T21:00:00+01:00",
+    "price": 35188,
+    "PMH": 31845,
+    "TEU": 9755,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T22:00:00+01:00",
+    "price": 25367,
+    "PMH": 28743,
+    "TEU": 2927,
+    "EDCGAS": 0,
+    "simulated": false
+  },
+  {
+    "date": "2026-10-25T23:00:00+01:00",
+    "price": 23796,
+    "PMH": 27179,
+    "TEU": 2927,
+    "EDCGAS": 0,
+    "simulated": false
+  }
+]

@@ -1,11 +1,18 @@
+import { readFile } from "node:fs/promises";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import { applyTomorrowPVPC, persistSimulatedPVPC, resolveTomorrowPVPC } from "./pvpcEstimate";
+import {
+  applyTodayPVPC,
+  applyTomorrowPVPC,
+  persistSimulatedPVPC,
+  resolveTomorrowPVPC,
+} from "./pvpcEstimate";
 import {
   API_BASE_URL,
   DATA_DIR,
   fetchText,
+  fileExists,
   isMainModule,
   isRecord,
   runCli,
@@ -48,8 +55,14 @@ export async function runPrices(): Promise<void> {
   const body = await fetchText(`${API_BASE_URL}/generic`, "Prices");
   const prices = parsePrices(body);
   const now = dayjs().tz(TIME_ZONE);
+  const today = now.format("YYYY-MM-DD");
   const yesterday = now.subtract(1, "day").format("YYYY-MM-DD");
   const tomorrow = now.add(1, "day").format("YYYY-MM-DD");
+  const todayPath = `${DATA_DIR}/${today.replaceAll("-", "")}-pvpc.json`;
+  if (await fileExists(todayPath)) {
+    const todayPrices: unknown = JSON.parse(await readFile(todayPath, "utf8"));
+    applyTodayPVPC(prices, todayPrices, today, now);
+  }
   const forecast = await resolveTomorrowPVPC(prices.pvpc.nextPrices, yesterday, tomorrow);
   applyTomorrowPVPC(prices, forecast, tomorrow);
   const lastUpdated = now.format("YYYY-MM-DD HH:mm:ss");

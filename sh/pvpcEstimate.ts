@@ -179,6 +179,9 @@ export function estimatePVPCTomorrow(
 }
 
 function pointsForLocalDate(values: unknown, date: string, source: string): PricePoint[] {
+  if (values === undefined || values === null) {
+    return [];
+  }
   if (!Array.isArray(values)) {
     throw new Error(`[PVPC estimate] Invalid ${source} prices`);
   }
@@ -203,7 +206,10 @@ async function readDailyPrices(date: string, source: "pvpc" | "omie"): Promise<u
   return JSON.parse(await readFile(path, "utf8")) as unknown;
 }
 
-function summarize(prices: PricePoint[]): Record<string, unknown> {
+function summarize(
+  prices: PricePoint[],
+  averagePrices: PricePoint[] = prices,
+): Record<string, unknown> {
   const best = prices.reduce((current, point) => (point.price < current.price ? point : current));
   const worst = prices.reduce((current, point) => (point.price > current.price ? point : current));
   const summarizePoint = ({ date, price, simulated }: PricePoint) => ({
@@ -212,11 +218,44 @@ function summarize(prices: PricePoint[]): Record<string, unknown> {
     simulated,
   });
   return {
-    avgPrice: Math.round(prices.reduce((sum, point) => sum + point.price, 0) / prices.length),
+    avgPrice: Math.round(
+      averagePrices.reduce((sum, point) => sum + point.price, 0) / averagePrices.length,
+    ),
     bestPrice: summarizePoint(best),
     currentPrice: summarizePoint(prices[0]),
     worstPrice: summarizePoint(worst),
   };
+}
+
+export function applyTodayPVPC(
+  payload: Record<string, unknown>,
+  values: unknown,
+  today: string,
+  now: dayjs.Dayjs,
+): void {
+  const official = validateDay(values, today, "official PVPC today", true).map(
+    ({ timestamp: _timestamp, localHour: _localHour, occurrence: _occurrence, ...point }) => point,
+  );
+  const currentHour = now.tz(TIME_ZONE).startOf("hour").valueOf();
+  const remainingToday = official.filter(
+    (point) => localDate(point.date, "PVPC").valueOf() >= currentHour,
+  );
+  if (remainingToday.length === 0) {
+    throw new Error(`[PVPC estimate] No current or future PVPC prices for ${today}`);
+  }
+
+  const pvpc = isRecord(payload.pvpc) ? payload.pvpc : {};
+  const apiPrices = pvpc.nextPrices;
+  if (apiPrices !== undefined && apiPrices !== null && !Array.isArray(apiPrices)) {
+    throw new Error("[PVPC estimate] Prices API returned invalid PVPC nextPrices");
+  }
+  const otherDays = (apiPrices ?? []).filter((value) => {
+    const point = parsePoint(value, "PVPC");
+    return localDate(point.date, "PVPC").format("YYYY-MM-DD") !== today;
+  });
+
+  payload.pvpc = { ...pvpc, nextPrices: [...remainingToday, ...otherDays] };
+  payload.pvpcToday = summarize(remainingToday, official);
 }
 
 export async function resolveTomorrowPVPC(
@@ -272,10 +311,10 @@ export function applyTomorrowPVPC(
   }
   const pvpc = payload.pvpc;
   const apiPrices = pvpc.nextPrices;
-  if (!Array.isArray(apiPrices)) {
+  if (apiPrices !== undefined && apiPrices !== null && !Array.isArray(apiPrices)) {
     throw new Error("[PVPC estimate] Prices API returned invalid PVPC nextPrices");
   }
-  const remainingPrices = apiPrices.filter((value) => {
+  const remainingPrices = (apiPrices ?? []).filter((value) => {
     const point = parsePoint(value, "PVPC");
     return localDate(point.date, "PVPC").format("YYYY-MM-DD") !== tomorrow;
   });

@@ -47,7 +47,7 @@ export async function runPVPC(inputDate?: string): Promise<void> {
   }
 
   const dateForApi = targetDate.format("YYYY-MM-DD");
-  const url = new URL(`${API_BASE_URL}/getTomorrowPricesPVPC`);
+  const url = new URL(`${API_BASE_URL}/getTomorrowPricesPVPC?sendMessage=false`);
   url.searchParams.set("date", dateForApi);
   const data = await fetchTextIfAvailable(url.toString(), "PVPC");
   if (!data) {
