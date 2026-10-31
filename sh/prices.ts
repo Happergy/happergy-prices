@@ -30,6 +30,12 @@ interface GenericPrices extends Record<string, unknown> {
   pvpcTomorrow: unknown;
 }
 
+type PricesFetcher = (url: string, context: string) => Promise<string>;
+type Waiter = (milliseconds: number) => Promise<void>;
+
+const GENERIC_PRICES_ATTEMPTS = 3;
+const GENERIC_PRICES_RETRY_DELAY_MS = 2_000;
+
 function parsePrices(body: string): GenericPrices {
   const value: unknown = JSON.parse(body);
   if (
@@ -51,9 +57,41 @@ function parsePrices(body: string): GenericPrices {
   };
 }
 
+function hasCompletePVPC(prices: GenericPrices): boolean {
+  return Array.isArray(prices.pvpc.devices) && isRecord(prices.pvpc.summary);
+}
+
+async function wait(milliseconds: number): Promise<void> {
+  await new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
+}
+
+export async function fetchGenericPrices(
+  fetcher: PricesFetcher = fetchText,
+  waiter: Waiter = wait,
+  attempts = GENERIC_PRICES_ATTEMPTS,
+): Promise<GenericPrices> {
+  if (!Number.isInteger(attempts) || attempts < 1) {
+    throw new Error("Prices attempts must be a positive integer");
+  }
+
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    const body = await fetcher(`${API_BASE_URL}/generic`, "Prices");
+    const prices = parsePrices(body);
+    if (hasCompletePVPC(prices)) return prices;
+
+    if (attempt < attempts) {
+      console.warn(
+        `[Prices] Incomplete PVPC response (attempt ${attempt}/${attempts}); retrying in ${GENERIC_PRICES_RETRY_DELAY_MS} ms`,
+      );
+      await waiter(GENERIC_PRICES_RETRY_DELAY_MS);
+    }
+  }
+
+  throw new Error(`Prices API returned PVPC without devices or summary after ${attempts} attempts`);
+}
+
 export async function runPrices(): Promise<void> {
-  const body = await fetchText(`${API_BASE_URL}/generic`, "Prices");
-  const prices = parsePrices(body);
+  const prices = await fetchGenericPrices();
   const now = dayjs().tz(TIME_ZONE);
   const today = now.format("YYYY-MM-DD");
   const yesterday = now.subtract(1, "day").format("YYYY-MM-DD");
