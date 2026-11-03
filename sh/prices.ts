@@ -30,11 +30,10 @@ interface GenericPrices extends Record<string, unknown> {
   pvpcTomorrow: unknown;
 }
 
-type PricesFetcher = (url: string, context: string) => Promise<string>;
-type Waiter = (milliseconds: number) => Promise<void>;
-
-const GENERIC_PRICES_ATTEMPTS = 3;
-const GENERIC_PRICES_RETRY_DELAY_MS = 2_000;
+interface DevicePrice {
+  date: string;
+  price: number;
+}
 
 function parsePrices(body: string): GenericPrices {
   const value: unknown = JSON.parse(body);
@@ -57,41 +56,95 @@ function parsePrices(body: string): GenericPrices {
   };
 }
 
-function hasCompletePVPC(prices: GenericPrices): boolean {
-  return Array.isArray(prices.pvpc.devices) && isRecord(prices.pvpc.summary);
+function deviceCost(prices: DevicePrice[]): string {
+  return (prices.reduce((sum, point) => sum + point.price, 0) / 100_000).toPrecision(2);
 }
 
-async function wait(milliseconds: number): Promise<void> {
-  await new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
+function deviceTime(value: dayjs.ConfigType): string {
+  return dayjs(value).utc().format("YYYY-MM-DDTHH:mm:ssZ");
 }
 
-export async function fetchGenericPrices(
-  fetcher: PricesFetcher = fetchText,
-  waiter: Waiter = wait,
-  attempts = GENERIC_PRICES_ATTEMPTS,
-): Promise<GenericPrices> {
-  if (!Number.isInteger(attempts) || attempts < 1) {
-    throw new Error("Prices attempts must be a positive integer");
-  }
+function createGenericDevices(values: unknown, today: string): Record<string, unknown>[] {
+  const points = Array.isArray(values)
+    ? values.flatMap((value): DevicePrice[] => {
+        if (
+          !isRecord(value) ||
+          typeof value.date !== "string" ||
+          typeof value.price !== "number" ||
+          value.simulated === true ||
+          dayjs(value.date).tz(TIME_ZONE).format("YYYY-MM-DD") !== today
+        ) {
+          return [];
+        }
+        return [{ date: value.date, price: value.price }];
+      })
+    : [];
 
-  for (let attempt = 1; attempt <= attempts; attempt += 1) {
-    const body = await fetcher(`${API_BASE_URL}/generic`, "Prices");
-    const prices = parsePrices(body);
-    if (hasCompletePVPC(prices)) return prices;
-
-    if (attempt < attempts) {
-      console.warn(
-        `[Prices] Incomplete PVPC response (attempt ${attempt}/${attempts}); retrying in ${GENERIC_PRICES_RETRY_DELAY_MS} ms`,
-      );
-      await waiter(GENERIC_PRICES_RETRY_DELAY_MS);
+  return Array.from({ length: 8 }, (_, index) => {
+    const duration = index + 1;
+    if (points.length < duration) {
+      const start = dayjs();
+      return {
+        id: `generic${duration}`,
+        duration: String(duration),
+        consumptionKWh: "1",
+        isOutOfRange: true,
+        startTime: deviceTime(start),
+        endTime: deviceTime(start.add(duration, "hour")),
+        currentCost: "0.0",
+        cheapestCost: "0.0",
+        costSavings: 0,
+      };
     }
-  }
 
-  throw new Error(`Prices API returned PVPC without devices or summary after ${attempts} attempts`);
+    const currentCost = deviceCost(points.slice(0, duration));
+    let cheapestIndex = 0;
+    let cheapestCost = currentCost;
+    for (let start = 1; start <= points.length - duration; start += 1) {
+      const cost = deviceCost(points.slice(start, start + duration));
+      if (Number(cost) < Number(cheapestCost)) {
+        cheapestIndex = start;
+        cheapestCost = cost;
+      }
+    }
+    const start = points[cheapestIndex];
+    return {
+      id: `generic${duration}`,
+      duration: String(duration),
+      consumptionKWh: "1",
+      isOutOfRange: false,
+      startTime: deviceTime(start.date),
+      endTime: deviceTime(dayjs(start.date).add(duration, "hour")),
+      currentCost,
+      cheapestCost,
+      costSavings: Number(currentCost) - Number(cheapestCost),
+    };
+  });
+}
+
+function withoutSimulation(value: unknown): unknown {
+  if (!isRecord(value)) return value;
+  const { simulated: _simulated, ...point } = value;
+  return point;
+}
+
+export function completeMissingPVPCMetadata(prices: GenericPrices, today: string): void {
+  if (!Array.isArray(prices.pvpc.devices)) {
+    prices.pvpc.devices = createGenericDevices(prices.pvpc.nextPrices, today);
+  }
+  if (!isRecord(prices.pvpc.summary) && isRecord(prices.pvpcToday)) {
+    prices.pvpc.summary = {
+      avgPrice: prices.pvpcToday.avgPrice,
+      bestPrice: withoutSimulation(prices.pvpcToday.bestPrice),
+      currentPrice: withoutSimulation(prices.pvpcToday.currentPrice),
+      worstPrice: withoutSimulation(prices.pvpcToday.worstPrice),
+    };
+  }
 }
 
 export async function runPrices(): Promise<void> {
-  const prices = await fetchGenericPrices();
+  const body = await fetchText(`${API_BASE_URL}/generic`, "Prices");
+  const prices = parsePrices(body);
   const now = dayjs().tz(TIME_ZONE);
   const today = now.format("YYYY-MM-DD");
   const yesterday = now.subtract(1, "day").format("YYYY-MM-DD");
@@ -103,6 +156,7 @@ export async function runPrices(): Promise<void> {
   }
   const forecast = await resolveTomorrowPVPC(prices.pvpc.nextPrices, yesterday, tomorrow);
   applyTomorrowPVPC(prices, forecast, tomorrow);
+  completeMissingPVPCMetadata(prices, today);
   const lastUpdated = now.format("YYYY-MM-DD HH:mm:ss");
   const omiePrices = { omie: { prices: prices.omie, lastUpdated } };
   const pvpcPrices = {

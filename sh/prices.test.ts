@@ -1,64 +1,69 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
-import { fetchGenericPrices } from "./prices";
+import { completeMissingPVPCMetadata } from "./prices";
 
-function response(pvpc: Record<string, unknown>): string {
-  return JSON.stringify({
-    omie: {},
-    pvpc,
-    pvpcToday: {},
-    pvpcTomorrow: {},
-  });
-}
-
-describe("generic prices retrieval", () => {
-  test("accepts a complete PVPC response without retrying", async () => {
-    let calls = 0;
-    const prices = await fetchGenericPrices(
-      async () => {
-        calls += 1;
-        return response({ nextPrices: [], devices: [], summary: {} });
+describe("generic PVPC metadata fallback", () => {
+  test("creates devices and summary when generic returns them empty", () => {
+    const prices = {
+      omie: {},
+      pvpc: {
+        nextPrices: [30_000, 10_000, 20_000, 40_000, 50_000, 60_000, 70_000, 80_000].map(
+          (price, hour) => ({
+            date: `2026-11-03T${String(hour).padStart(2, "0")}:00:00Z`,
+            price,
+            simulated: false,
+          }),
+        ),
       },
-      async () => assert.fail("complete responses must not wait"),
-    );
+      pvpcToday: {
+        avgPrice: 45_000,
+        bestPrice: { date: "2026-11-03T01:00:00Z", price: 10_000, simulated: false },
+        currentPrice: { date: "2026-11-03T00:00:00Z", price: 30_000, simulated: false },
+        worstPrice: { date: "2026-11-03T07:00:00Z", price: 80_000, simulated: false },
+      },
+      pvpcTomorrow: {},
+    };
 
-    assert.equal(calls, 1);
-    assert.deepEqual(prices.pvpc.devices, []);
-    assert.deepEqual(prices.pvpc.summary, {});
+    completeMissingPVPCMetadata(prices, "2026-11-03");
+
+    const pvpc = prices.pvpc as typeof prices.pvpc & {
+      devices: Record<string, unknown>[];
+      summary: Record<string, unknown>;
+    };
+    const devices = pvpc.devices;
+    assert.equal(devices.length, 8);
+    assert.deepEqual(devices[0], {
+      id: "generic1",
+      duration: "1",
+      consumptionKWh: "1",
+      isOutOfRange: false,
+      startTime: "2026-11-03T01:00:00+00:00",
+      endTime: "2026-11-03T02:00:00+00:00",
+      currentCost: "0.30",
+      cheapestCost: "0.10",
+      costSavings: 0.19999999999999998,
+    });
+    assert.deepEqual(pvpc.summary, {
+      avgPrice: 45_000,
+      bestPrice: { date: "2026-11-03T01:00:00Z", price: 10_000 },
+      currentPrice: { date: "2026-11-03T00:00:00Z", price: 30_000 },
+      worstPrice: { date: "2026-11-03T07:00:00Z", price: 80_000 },
+    });
   });
 
-  test("retries an incomplete PVPC response", async () => {
-    let calls = 0;
-    const waits: number[] = [];
-    const prices = await fetchGenericPrices(
-      async () => {
-        calls += 1;
-        return calls === 1
-          ? response({ nextPrices: [] })
-          : response({ nextPrices: [], devices: [{ id: "generic1" }], summary: {} });
-      },
-      async (milliseconds) => {
-        waits.push(milliseconds);
-      },
-    );
+  test("preserves devices and summary returned by generic", () => {
+    const devices = [{ id: "api-device" }];
+    const summary = { avgPrice: 123 };
+    const prices = {
+      omie: {},
+      pvpc: { nextPrices: [], devices, summary },
+      pvpcToday: {},
+      pvpcTomorrow: {},
+    };
 
-    assert.equal(calls, 2);
-    assert.deepEqual(waits, [2_000]);
-    assert.deepEqual(prices.pvpc.devices, [{ id: "generic1" }]);
-  });
+    completeMissingPVPCMetadata(prices, "2026-11-03");
 
-  test("does not overwrite files after repeated incomplete responses", async () => {
-    let calls = 0;
-    await assert.rejects(
-      fetchGenericPrices(
-        async () => {
-          calls += 1;
-          return response({ nextPrices: [] });
-        },
-        async () => {},
-      ),
-      /without devices or summary after 3 attempts/,
-    );
-    assert.equal(calls, 3);
+    assert.equal(prices.pvpc.devices, devices);
+    assert.equal(prices.pvpc.summary, summary);
   });
 });
